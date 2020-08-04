@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="table_view_title_txt_color">#333333</color>
+    <color name="table_view_second_txt_color">#83889A</color>
+    <!--升涨色-->
+    <color name="table_view_rise_txt_color">#E23502</color>
+    <!--降跌色-->
+    <color name="table_view_fall_txt_color">#28B464</color>
+    <!--顶部表头背景-->
+    <color name="table_view_header_bg_color">#F8F9FC</color>
+</resources>

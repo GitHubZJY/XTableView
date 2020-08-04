@@ -1,0 +1,3 @@
+include ':xtableview'
+include ':app'
+rootProject.name = "XTableView"

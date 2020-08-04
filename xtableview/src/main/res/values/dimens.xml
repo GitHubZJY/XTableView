@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--单元格宽度-->
+    <dimen name="table_view_item_width">125dp</dimen>
+</resources>
