@@ -17,6 +17,7 @@ import com.zjy.xtableview.utils.DensityUtil;
 import com.zjy.xtableview.utils.ScrollHelper;
 import com.zjy.xtableview.widget.TableHeaderView;
 import com.zjy.xtableview.widget.TouchSwipeRecyclerView;
+import com.zjy.xtableview.widget.item.TableCellAdapter;
 import com.zjy.xtableview.widget.swipe.OnItemMenuClickListener;
 import com.zjy.xtableview.widget.swipe.SwipeMenu;
 import com.zjy.xtableview.widget.swipe.SwipeMenuBridge;
@@ -39,6 +40,7 @@ public class XTableView extends LinearLayout implements ITableView {
     private TouchSwipeRecyclerView vTableRv;
     private TableHeaderView vHeaderView;
     private TableItemAdapter mItemAdapter;
+    private TableCellAdapter mCellAdapter;
     /**
      * 表头高度
      */
@@ -122,10 +124,17 @@ public class XTableView extends LinearLayout implements ITableView {
         mItemAdapter.notifyItemChanged(position, 1);
     }
 
-    private void initRv(List<TableItemModel> dataList) {
+    @Override
+    public void setCellAdapter(TableCellAdapter cellAdapter) {
+        mCellAdapter = cellAdapter;
+    }
 
+    private void initRv(final List<TableItemModel> dataList) {
+        if (mCellAdapter == null) {
+            throw new IllegalStateException("Please call setCellAdapter() first before bindData.");
+        }
         vTableRv.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        mItemAdapter = new TableItemAdapter(getContext(), dataList, mCellWidth, mRowHeight, mScrollHelper);
+        mItemAdapter = new TableItemAdapter(getContext(), dataList, mCellWidth, mRowHeight, mScrollHelper, mCellAdapter);
 
         vTableRv.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override

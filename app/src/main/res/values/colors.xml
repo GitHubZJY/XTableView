@@ -3,4 +3,9 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <!--升涨色-->
+    <color name="table_view_rise_txt_color">#E23502</color>
+    <!--降跌色-->
+    <color name="table_view_fall_txt_color">#28B464</color>
 </resources>

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -22,6 +20,7 @@ import com.zjy.xtableview.model.TableItemCellModel;
 import com.zjy.xtableview.model.TableItemModel;
 import com.zjy.xtableview.utils.DensityUtil;
 import com.zjy.xtableview.utils.ScrollHelper;
+import com.zjy.xtableview.widget.item.TableCellAdapter;
 
 import java.util.List;
 
@@ -43,6 +42,8 @@ public class TableItemView extends ConstraintLayout {
     private ObjectAnimator mAnimator;
     private boolean mNotifyAnim = false;
     private int mCellWidth;
+
+    private TableCellAdapter<View> mAdapter;
 
     public TableItemView(Context context) {
         this(context, null);
@@ -75,6 +76,13 @@ public class TableItemView extends ConstraintLayout {
         vTitleLayout.setMinHeight(height);
     }
 
+    public void setAdapter(TableCellAdapter<View> adapter) {
+        if (adapter == null) {
+            return;
+        }
+        mAdapter = adapter;
+    }
+
     public void bindData(TableItemModel tableItemModel) {
         if (tableItemModel == null) {
             return;
@@ -93,54 +101,37 @@ public class TableItemView extends ConstraintLayout {
             int columnCount = mScrollHelper.getColumnCount();
             int maxScrollDistance = mCellWidth * (columnCount + 1) - DensityUtil.getScreenWidth(getContext());
             vDataLl.setMaxScrollDistance(maxScrollDistance);
-            if (vDataLl.getChildCount() == 0) {
-                for (int i = 0; i < dataList.size(); i++) {
-                    generateRowCell(dataList.get(i));
-                }
-            } else {
-                for (int i = 0; i < dataList.size(); i++) {
-                    TextView cellTv = ((TextView) vDataLl.getChildAt(i));
-                    cellTv.setText(dataList.get(i).getContent());
-                    cellTv.setTextColor(dataList.get(i).isRise() ? getResources().getColor(R.color.table_view_rise_txt_color)
-                            : getResources().getColor(R.color.table_view_fall_txt_color));
-                }
+            for (int i = 0; i < dataList.size(); i++) {
+                bindCellView(i, dataList.get(i));
             }
 
         }
     }
 
-    private TextView generateRowCell(final TableItemCellModel cellModel) {
-        TextView cellTv = new TextView(getContext());
-        cellTv.setTextColor(cellModel.isRise() ?
-                getResources().getColor(R.color.table_view_rise_txt_color)
-                : getResources().getColor(R.color.table_view_fall_txt_color));
-        cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        vDataLl.addView(cellTv);
-        cellTv.getLayoutParams().width = mCellWidth;
-        cellTv.getLayoutParams().height = MATCH_PARENT;
-        cellTv.setGravity(Gravity.CENTER);
-        cellTv.setText(cellModel.getContent());
-        cellTv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.clickCell(cellModel);
+    private void bindCellView(int position, final TableItemCellModel cellModel) {
+        if (vDataLl.getChildAt(position) != null) {
+            mAdapter.bindData(position, cellModel, vDataLl.getChildAt(position));
+        } else {
+            View cellView = mAdapter.getView(position, cellModel, vDataLl);
+            vDataLl.addView(cellView);
+            cellView.getLayoutParams().width = mCellWidth;
+            cellView.getLayoutParams().height = MATCH_PARENT;
+            cellView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        mListener.clickCell(cellModel);
+                    }
                 }
-            }
-        });
-        return cellTv;
+            });
+        }
     }
 
-    public void notifyDetailData(List<TableItemCellModel> dataList) {
-        if (dataList == null || dataList.isEmpty()) {
+    public void notifyDetailData(TableItemModel tableItemModel) {
+        if (tableItemModel == null || tableItemModel.getDataList() == null || tableItemModel.getDataList().isEmpty()) {
             return;
         }
-        for (int i = 0; i < dataList.size(); i++) {
-            TextView cellTv = ((TextView) vDataLl.getChildAt(i));
-            cellTv.setText(dataList.get(i).getContent());
-            cellTv.setTextColor(dataList.get(i).isRise() ? getResources().getColor(R.color.table_view_rise_txt_color)
-                    : getResources().getColor(R.color.table_view_fall_txt_color));
-        }
+        bindData(tableItemModel);
         startAnim();
     }
 

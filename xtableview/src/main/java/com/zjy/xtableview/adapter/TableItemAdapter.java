@@ -13,6 +13,7 @@ import com.zjy.xtableview.TableItemClickListener;
 import com.zjy.xtableview.model.TableItemModel;
 import com.zjy.xtableview.utils.ScrollHelper;
 import com.zjy.xtableview.widget.TableItemView;
+import com.zjy.xtableview.widget.item.TableCellAdapter;
 
 import java.util.List;
 
@@ -29,13 +30,15 @@ public class TableItemAdapter extends RecyclerView.Adapter<TableItemAdapter.View
     private int mMinHeight;
     private int mCellWidth;
     private ScrollHelper mScrollHelper;
+    private TableCellAdapter mCellAdapter;
 
-    public TableItemAdapter(Context context, List<TableItemModel> dataList, int cellWidth, int minItemHeight, ScrollHelper helper) {
+    public TableItemAdapter(Context context, List<TableItemModel> dataList, int cellWidth, int minItemHeight, ScrollHelper helper, TableCellAdapter cellAdapter) {
         this.mItemList = dataList;
         this.mContext = context;
         this.mMinHeight = minItemHeight;
         this.mCellWidth = cellWidth;
         this.mScrollHelper = helper;
+        this.mCellAdapter = cellAdapter;
     }
 
     public void setTableItemClickListener(TableItemClickListener listener) {
@@ -61,6 +64,7 @@ public class TableItemAdapter extends RecyclerView.Adapter<TableItemAdapter.View
     @Override
     public void onBindViewHolder(@NonNull final TableItemAdapter.ViewHolder holder, final int position) {
         mScrollHelper.bindTableItemView(position, holder.vItemView);
+        holder.vItemView.setAdapter(mCellAdapter);
         holder.vItemView.bindData(mItemList.get(position));
         holder.vItemView.setTableItemClickListener(mListener);
     }
@@ -68,8 +72,9 @@ public class TableItemAdapter extends RecyclerView.Adapter<TableItemAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
         mScrollHelper.bindTableItemView(position, holder.vItemView);
+        holder.vItemView.setAdapter(mCellAdapter);
         if (payloads.size() > 0) {
-            holder.vItemView.notifyDetailData(mItemList.get(position).getDataList());
+            holder.vItemView.notifyDetailData(mItemList.get(position));
         } else {
             holder.vItemView.bindData(mItemList.get(position));
         }

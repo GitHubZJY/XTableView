@@ -15,7 +15,7 @@
         android:drawablePadding="6dp"
         android:gravity="center"
         android:text="删除"
-        android:textColor="@color/table_view_rise_txt_color"
+        android:textColor="@color/table_swipe_delete_txt_color"
         android:textSize="13sp" />
 
 </LinearLayout>

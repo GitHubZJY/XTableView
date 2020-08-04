@@ -1,8 +1,11 @@
 package com.zjy.xtableview;
 
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
-
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.zjy.xtableview.model.TableHeaderModel;
 import com.zjy.xtableview.model.TableItemCellModel;
 import com.zjy.xtableview.model.TableItemModel;
+import com.zjy.xtableview.widget.item.TableCellAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,29 @@ public class MainActivity extends AppCompatActivity {
 
         initData();
 
-        ITableView vTableView = findViewById(R.id.table_view);
+        final ITableView vTableView = findViewById(R.id.table_view);
+        vTableView.setCellAdapter(new TableCellAdapter<TextView>() {
+
+            @Override
+            public TextView getView(int position, TableItemCellModel cellModel, ViewGroup parent) {
+                TextView cellTv = new TextView(MainActivity.this);
+                cellTv.setTextColor(cellModel.isRise() ?
+                        getResources().getColor(R.color.table_view_rise_txt_color)
+                        : getResources().getColor(R.color.table_view_fall_txt_color));
+                cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                cellTv.setGravity(Gravity.CENTER);
+                cellTv.setText(cellModel.getContent());
+                return cellTv;
+            }
+
+            @Override
+            public void bindData(int position, TableItemCellModel cellModel, TextView itemView) {
+                itemView.setTextColor(cellModel.isRise() ?
+                        getResources().getColor(R.color.table_view_rise_txt_color)
+                        : getResources().getColor(R.color.table_view_fall_txt_color));
+                itemView.setText(cellModel.getContent());
+            }
+        });
         vTableView.bindData(mHeaderModel, mDataList);
         vTableView.setLongPressDragEnable(true);
         vTableView.setSwipeEnable(true);
@@ -84,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
         headerData.add("纵向5");
         headerData.add("纵向6");
         mHeaderModel.setHeaderData(headerData);
+
+
     }
 
 
