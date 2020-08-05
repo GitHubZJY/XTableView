@@ -1,13 +1,11 @@
 package com.zjy.xtableview.model;
 
-import java.util.List;
-
 /**
- * Date: 2020/7/15
+ * Date: 2020/8/5
  * Author: Yang
- * Describe: 二维表行视图数据模型
+ * Describe:
  */
-public class TableItemModel {
+public class TableRowHeaderModel {
 
     /**
      * 行头部标题
@@ -17,10 +15,11 @@ public class TableItemModel {
      * 行头部描述
      */
     private String detail;
-    /**
-     * 行内容数据
-     */
-    private List<TableItemCellModel> dataList;
+
+    public TableRowHeaderModel(String title, String detail) {
+        this.title = title;
+        this.detail = detail;
+    }
 
     public String getTitle() {
         return title;
@@ -36,13 +35,5 @@ public class TableItemModel {
 
     public void setDetail(String detail) {
         this.detail = detail;
-    }
-
-    public List<TableItemCellModel> getDataList() {
-        return dataList;
-    }
-
-    public void setDataList(List<TableItemCellModel> dataList) {
-        this.dataList = dataList;
     }
 }

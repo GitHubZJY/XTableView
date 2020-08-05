@@ -9,11 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zjy.xtableview.R;
-import com.zjy.xtableview.TableItemClickListener;
-import com.zjy.xtableview.model.TableItemModel;
+import com.zjy.xtableview.model.TableRowModel;
 import com.zjy.xtableview.utils.ScrollHelper;
 import com.zjy.xtableview.widget.TableItemView;
-import com.zjy.xtableview.widget.item.TableCellAdapter;
 
 import java.util.List;
 
@@ -22,17 +20,16 @@ import java.util.List;
  * Author: Yang
  * Describe: 二维列表适配器
  */
-public class TableItemAdapter extends RecyclerView.Adapter<TableItemAdapter.ViewHolder> {
+public class TableItemAdapter<T extends TableRowModel<?, ?>> extends RecyclerView.Adapter<TableItemAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<TableItemModel> mItemList;
-    private TableItemClickListener mListener;
+    private List<T> mItemList;
     private int mMinHeight;
     private int mCellWidth;
     private ScrollHelper mScrollHelper;
-    private TableCellAdapter mCellAdapter;
+    private XTableAdapter<?, ?> mCellAdapter;
 
-    public TableItemAdapter(Context context, List<TableItemModel> dataList, int cellWidth, int minItemHeight, ScrollHelper helper, TableCellAdapter cellAdapter) {
+    public TableItemAdapter(Context context, List<T> dataList, int cellWidth, int minItemHeight, ScrollHelper helper, XTableAdapter<?, ?> cellAdapter) {
         this.mItemList = dataList;
         this.mContext = context;
         this.mMinHeight = minItemHeight;
@@ -41,15 +38,11 @@ public class TableItemAdapter extends RecyclerView.Adapter<TableItemAdapter.View
         this.mCellAdapter = cellAdapter;
     }
 
-    public void setTableItemClickListener(TableItemClickListener listener) {
-        mListener = listener;
-    }
-
-    public void setData(List<TableItemModel> itemList) {
+    public void setData(List<T> itemList) {
         mItemList = itemList;
     }
 
-    public List<TableItemModel> getItemList() {
+    public List<T> getItemList() {
         return mItemList;
     }
 
@@ -65,8 +58,7 @@ public class TableItemAdapter extends RecyclerView.Adapter<TableItemAdapter.View
     public void onBindViewHolder(@NonNull final TableItemAdapter.ViewHolder holder, final int position) {
         mScrollHelper.bindTableItemView(position, holder.vItemView);
         holder.vItemView.setAdapter(mCellAdapter);
-        holder.vItemView.bindData(mItemList.get(position));
-        holder.vItemView.setTableItemClickListener(mListener);
+        holder.vItemView.bindData(position, mItemList.get(position));
     }
 
     @Override
@@ -74,11 +66,10 @@ public class TableItemAdapter extends RecyclerView.Adapter<TableItemAdapter.View
         mScrollHelper.bindTableItemView(position, holder.vItemView);
         holder.vItemView.setAdapter(mCellAdapter);
         if (payloads.size() > 0) {
-            holder.vItemView.notifyDetailData(mItemList.get(position));
+            holder.vItemView.notifyDetailData(position, mItemList.get(position));
         } else {
-            holder.vItemView.bindData(mItemList.get(position));
+            holder.vItemView.bindData(position, mItemList.get(position));
         }
-        holder.vItemView.setTableItemClickListener(mListener);
     }
 
     @Override

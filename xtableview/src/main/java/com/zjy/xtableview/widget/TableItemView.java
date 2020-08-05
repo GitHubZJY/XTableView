@@ -4,23 +4,19 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.zjy.xtableview.R;
-import com.zjy.xtableview.TableItemClickListener;
-import com.zjy.xtableview.model.TableItemCellModel;
-import com.zjy.xtableview.model.TableItemModel;
+import com.zjy.xtableview.adapter.XTableAdapter;
+import com.zjy.xtableview.model.TableRowModel;
 import com.zjy.xtableview.utils.DensityUtil;
 import com.zjy.xtableview.utils.ScrollHelper;
-import com.zjy.xtableview.widget.item.TableCellAdapter;
 
 import java.util.List;
 
@@ -31,19 +27,18 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  * Author: Yang
  * Describe: 二维表单行视图（包括单行表头和行列表）
  */
+@SuppressWarnings("rawtypes")
 public class TableItemView extends ConstraintLayout {
 
     private View vRootView;
     private ConstraintLayout vTitleLayout;
-    private TextView vTitle;
-    private TextView vDetail;
     private ScrollLinearLayout vDataLl;
     private ScrollHelper mScrollHelper;
     private ObjectAnimator mAnimator;
     private boolean mNotifyAnim = false;
     private int mCellWidth;
 
-    private TableCellAdapter<View> mAdapter;
+    private XTableAdapter mAdapter;
 
     public TableItemView(Context context) {
         this(context, null);
@@ -62,9 +57,8 @@ public class TableItemView extends ConstraintLayout {
         LayoutInflater.from(context).inflate(R.layout.table_item_layout, this);
         vRootView = findViewById(R.id.root_view);
         vTitleLayout = findViewById(R.id.title_layout);
-        vTitle = findViewById(R.id.title_tv);
-        vDetail = findViewById(R.id.detail_tv);
         vDataLl = findViewById(R.id.data_ll);
+        vDataLl.setOrientation(LinearLayout.HORIZONTAL);
     }
 
     public void attachScrollHelper(ScrollHelper helper) {
@@ -76,62 +70,47 @@ public class TableItemView extends ConstraintLayout {
         vTitleLayout.setMinHeight(height);
     }
 
-    public void setAdapter(TableCellAdapter<View> adapter) {
+    public void setAdapter(XTableAdapter adapter) {
         if (adapter == null) {
             return;
         }
         mAdapter = adapter;
     }
 
-    public void bindData(TableItemModel tableItemModel) {
-        if (tableItemModel == null) {
-            return;
+    public <T extends TableRowModel> void bindData(int position, T rowData) {
+        if (vTitleLayout.getChildCount() == 0) {
+            vTitleLayout.addView(mAdapter.onCreateRowHeader(position));
         }
-        String title = tableItemModel.getTitle();
-        String detail = tableItemModel.getDetail();
-        List<TableItemCellModel> dataList = tableItemModel.getDataList();
-        if (vTitle != null) {
-            vTitle.setText(TextUtils.isEmpty(title) ? "" : title);
-        }
-        if (vDetail != null) {
-            vDetail.setText(TextUtils.isEmpty(detail) ? "" : detail);
-        }
+        mAdapter.onBindRowHeader(position, vTitleLayout, rowData);
+        List<?> dataList = rowData.rowData;
         if (dataList != null) {
             mScrollHelper.setColumnCount(dataList.size());
             int columnCount = mScrollHelper.getColumnCount();
             int maxScrollDistance = mCellWidth * (columnCount + 1) - DensityUtil.getScreenWidth(getContext());
             vDataLl.setMaxScrollDistance(maxScrollDistance);
             for (int i = 0; i < dataList.size(); i++) {
-                bindCellView(i, dataList.get(i));
+                //TODO data.get(i)
+                bindCellView(i, rowData);
             }
 
         }
     }
 
-    private void bindCellView(int position, final TableItemCellModel cellModel) {
-        if (vDataLl.getChildAt(position) != null) {
-            mAdapter.bindData(position, cellModel, vDataLl.getChildAt(position));
-        } else {
-            View cellView = mAdapter.getView(position, cellModel, vDataLl);
+    private <T extends TableRowModel> void bindCellView(int position, final T cellModel) {
+        if (vDataLl.getChildAt(position) == null) {
+            View cellView = mAdapter.onCreateTableItem(position);
             vDataLl.addView(cellView);
             cellView.getLayoutParams().width = mCellWidth;
             cellView.getLayoutParams().height = MATCH_PARENT;
-            cellView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListener != null) {
-                        mListener.clickCell(cellModel);
-                    }
-                }
-            });
         }
+        mAdapter.onBindTableItem(position, vDataLl.getChildAt(position), cellModel);
     }
 
-    public void notifyDetailData(TableItemModel tableItemModel) {
-        if (tableItemModel == null || tableItemModel.getDataList() == null || tableItemModel.getDataList().isEmpty()) {
+    public <T extends TableRowModel> void notifyDetailData(int position, T tableItemModel) {
+        if (tableItemModel == null || tableItemModel.getRowData() == null || tableItemModel.getRowData().isEmpty()) {
             return;
         }
-        bindData(tableItemModel);
+        bindData(position, tableItemModel);
         startAnim();
     }
 
@@ -185,12 +164,6 @@ public class TableItemView extends ConstraintLayout {
 
     public void setNotifyAnim(boolean hasAnim) {
         mNotifyAnim = hasAnim;
-    }
-
-    private TableItemClickListener mListener;
-
-    public void setTableItemClickListener(TableItemClickListener listener) {
-        mListener = listener;
     }
 
     public interface ItemScrollListener {

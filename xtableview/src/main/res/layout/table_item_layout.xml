@@ -7,9 +7,8 @@
     android:background="@android:color/white"
     android:orientation="horizontal">
 
-    <include
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title_layout"
-        layout="@layout/table_item_title_layout"
         android:layout_width="@dimen/table_view_item_width"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

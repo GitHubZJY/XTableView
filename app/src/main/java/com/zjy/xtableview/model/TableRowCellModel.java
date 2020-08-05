@@ -5,7 +5,7 @@ package com.zjy.xtableview.model;
  * Author: Yang
  * Describe: 单个格子数据模型
  */
-public class TableItemCellModel {
+public class TableRowCellModel {
 
     private static final int RISE_CELL = 1;
     private static final int FALL_CELL = 2;
@@ -14,17 +14,17 @@ public class TableItemCellModel {
 
     private int type;
 
-    public TableItemCellModel(String content, int type) {
+    public TableRowCellModel(String content, int type) {
         this.content = content;
         this.type = type;
     }
 
-    public static TableItemCellModel createRiseCell(String content) {
-        return new TableItemCellModel(content, RISE_CELL);
+    public static TableRowCellModel createRiseCell(String content) {
+        return new TableRowCellModel(content, RISE_CELL);
     }
 
-    public static TableItemCellModel createFallCell(String content) {
-        return new TableItemCellModel(content, FALL_CELL);
+    public static TableRowCellModel createFallCell(String content) {
+        return new TableRowCellModel(content, FALL_CELL);
     }
 
     public String getContent() {

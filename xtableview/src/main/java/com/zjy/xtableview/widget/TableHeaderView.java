@@ -3,8 +3,6 @@ package com.zjy.xtableview.widget;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,8 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.zjy.xtableview.R;
-import com.zjy.xtableview.TableItemClickListener;
-import com.zjy.xtableview.model.TableHeaderModel;
+import com.zjy.xtableview.adapter.XTableAdapter;
 
 import java.util.List;
 
@@ -25,11 +22,13 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  * Author: Yang
  * Describe: 二维表头部视图
  */
+@SuppressWarnings("rawtypes")
 public class TableHeaderView extends LinearLayout implements TableItemView.ItemScrollListener {
 
     private TextView vTitle;
     private LinearLayout vHeaderRow;
     private int mHeaderCellWidth;
+    private XTableAdapter mAdapter;
 
     public TableHeaderView(Context context) {
         this(context, null);
@@ -50,37 +49,25 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
         vHeaderRow = findViewById(R.id.header_data_ll);
     }
 
-    public void bindData(TableHeaderModel tableHeaderModel) {
-        if (tableHeaderModel == null) {
-            return;
-        }
-        String title = tableHeaderModel.getHeaderTitle();
-        List<String> dataList = tableHeaderModel.getHeaderData();
+
+    public void setTableAdapter(XTableAdapter adapter) {
+        mAdapter = adapter;
+    }
+
+    public <T> void bindData(String title, List<T> dataList) {
         if (vTitle != null) {
             vTitle.setText(TextUtils.isEmpty(title) ? "" : title);
         }
         for (int i = 0; i < dataList.size(); i++) {
-            generateRowCell(tableHeaderModel).setText(dataList.get(i));
+            generateRowCell(i, dataList.get(i));
         }
     }
 
-    private TextView generateRowCell(final TableHeaderModel headerModel) {
-        TextView cellTv = new TextView(getContext());
-        cellTv.setTextColor(getResources().getColor(R.color.table_view_second_txt_color));
-        cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+    private <T> void generateRowCell(int position, final T headerModel) {
+        View cellTv = mAdapter.onBindHeader(position, headerModel);
         vHeaderRow.addView(cellTv);
         cellTv.getLayoutParams().width = mHeaderCellWidth;
         cellTv.getLayoutParams().height = MATCH_PARENT;
-        cellTv.setGravity(Gravity.CENTER);
-        cellTv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.clickHeaderCell(headerModel);
-                }
-            }
-        });
-        return cellTv;
     }
 
     public void setCellWidth(int cellWidth) {
@@ -99,9 +86,4 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
         vHeaderRow.scrollTo(x, 0);
     }
 
-    private TableItemClickListener mListener;
-
-    public void setTableItemClickListener(TableItemClickListener listener) {
-        mListener = listener;
-    }
 }

@@ -1,26 +1,22 @@
 package com.zjy.xtableview;
 
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.zjy.xtableview.adapter.CustomTableAdapter;
 import com.zjy.xtableview.model.TableHeaderModel;
-import com.zjy.xtableview.model.TableItemCellModel;
-import com.zjy.xtableview.model.TableItemModel;
-import com.zjy.xtableview.widget.item.TableCellAdapter;
+import com.zjy.xtableview.model.TableRowCellModel;
+import com.zjy.xtableview.model.TableRowHeaderModel;
+import com.zjy.xtableview.model.TableRowModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<TableItemModel> mDataList;
+    private List<TableRowModel<TableRowHeaderModel, TableRowCellModel>> mDataList;
     private TableHeaderModel mHeaderModel;
 
     @Override
@@ -31,72 +27,40 @@ public class MainActivity extends AppCompatActivity {
         initData();
 
         final ITableView vTableView = findViewById(R.id.table_view);
-        vTableView.setCellAdapter(new TableCellAdapter<TextView>() {
-
-            @Override
-            public TextView getView(int position, TableItemCellModel cellModel, ViewGroup parent) {
-                TextView cellTv = new TextView(MainActivity.this);
-                cellTv.setTextColor(cellModel.isRise() ?
-                        getResources().getColor(R.color.table_view_rise_txt_color)
-                        : getResources().getColor(R.color.table_view_fall_txt_color));
-                cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                cellTv.setGravity(Gravity.CENTER);
-                cellTv.setText(cellModel.getContent());
-                return cellTv;
-            }
-
-            @Override
-            public void bindData(int position, TableItemCellModel cellModel, TextView itemView) {
-                itemView.setTextColor(cellModel.isRise() ?
-                        getResources().getColor(R.color.table_view_rise_txt_color)
-                        : getResources().getColor(R.color.table_view_fall_txt_color));
-                itemView.setText(cellModel.getContent());
-            }
-        });
-        vTableView.bindData(mHeaderModel, mDataList);
         vTableView.setLongPressDragEnable(true);
         vTableView.setSwipeEnable(true);
-        vTableView.setTableItemClickListener(new TableItemClickListener() {
-            @Override
-            public void clickCell(TableItemCellModel cellModel) {
-                Toast.makeText(MainActivity.this, cellModel.getContent(), Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void clickHeaderCell(TableHeaderModel headerModel) {
+        vTableView.setTableAdapter(new CustomTableAdapter(this));
 
-            }
-        });
+        vTableView.bindData(mHeaderModel.getHeaderTitle(), mHeaderModel.getHeaderData(), mDataList);
     }
 
     private void initData() {
         mDataList = new ArrayList<>();
 
         for (int i = 0; i < 10000; i++) {
-            final TableItemModel model = new TableItemModel();
-            model.setTitle("横向标题1");
-            model.setDetail("横向描述1");
-            List<TableItemCellModel> childData = new ArrayList<>();
-            childData.add(TableItemCellModel.createRiseCell("123"));
-            childData.add(TableItemCellModel.createRiseCell("15%"));
-            childData.add(TableItemCellModel.createRiseCell("22"));
-            childData.add(TableItemCellModel.createRiseCell("112"));
-            childData.add(TableItemCellModel.createFallCell("-123"));
-            childData.add(TableItemCellModel.createFallCell("-99%"));
-            model.setDataList(childData);
+            final TableRowModel<TableRowHeaderModel, TableRowCellModel> model = new TableRowModel<>();
+            model.setRowHeader(new TableRowHeaderModel("横向标题1", "横向描述1"));
+            List<TableRowCellModel> childData = new ArrayList<>();
+            childData.add(TableRowCellModel.createRiseCell("123"));
+            childData.add(TableRowCellModel.createRiseCell("15%"));
+            childData.add(TableRowCellModel.createRiseCell("22"));
+            childData.add(TableRowCellModel.createRiseCell("112"));
+            childData.add(TableRowCellModel.createFallCell("-123"));
+            childData.add(TableRowCellModel.createFallCell("-99%"));
+            model.setRowData(childData);
             mDataList.add(model);
 
-            final TableItemModel model2 = new TableItemModel();
-            model2.setTitle("横向标题2");
-            model2.setDetail("横向描述2");
-            List<TableItemCellModel> childData2 = new ArrayList<>();
-            childData2.add(TableItemCellModel.createRiseCell("13"));
-            childData2.add(TableItemCellModel.createFallCell("-20%"));
-            childData2.add(TableItemCellModel.createRiseCell("12"));
-            childData2.add(TableItemCellModel.createRiseCell("10"));
-            childData2.add(TableItemCellModel.createRiseCell("057"));
-            childData2.add(TableItemCellModel.createRiseCell("62%"));
-            model2.setDataList(childData2);
+            final TableRowModel<TableRowHeaderModel, TableRowCellModel> model2 = new TableRowModel<>();
+            model2.setRowHeader(new TableRowHeaderModel("横向标题2", "横向描述2"));
+            List<TableRowCellModel> childData2 = new ArrayList<>();
+            childData2.add(TableRowCellModel.createRiseCell("13"));
+            childData2.add(TableRowCellModel.createFallCell("-20%"));
+            childData2.add(TableRowCellModel.createRiseCell("12"));
+            childData2.add(TableRowCellModel.createRiseCell("10"));
+            childData2.add(TableRowCellModel.createRiseCell("057"));
+            childData2.add(TableRowCellModel.createRiseCell("62%"));
+            model2.setRowData(childData2);
             mDataList.add(model2);
         }
 

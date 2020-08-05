@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zjy.xtableview.adapter.TableItemAdapter;
-import com.zjy.xtableview.model.TableHeaderModel;
-import com.zjy.xtableview.model.TableItemModel;
+import com.zjy.xtableview.adapter.XTableAdapter;
+import com.zjy.xtableview.model.TableRowModel;
 import com.zjy.xtableview.utils.DensityUtil;
 import com.zjy.xtableview.utils.ScrollHelper;
 import com.zjy.xtableview.widget.TableHeaderView;
 import com.zjy.xtableview.widget.TouchSwipeRecyclerView;
-import com.zjy.xtableview.widget.item.TableCellAdapter;
 import com.zjy.xtableview.widget.swipe.OnItemMenuClickListener;
 import com.zjy.xtableview.widget.swipe.SwipeMenu;
 import com.zjy.xtableview.widget.swipe.SwipeMenuBridge;
@@ -40,7 +39,7 @@ public class XTableView extends LinearLayout implements ITableView {
     private TouchSwipeRecyclerView vTableRv;
     private TableHeaderView vHeaderView;
     private TableItemAdapter mItemAdapter;
-    private TableCellAdapter mCellAdapter;
+    private XTableAdapter<?, ?> mTableAdapter;
     /**
      * 表头高度
      */
@@ -102,11 +101,11 @@ public class XTableView extends LinearLayout implements ITableView {
     }
 
     @Override
-    public void bindData(TableHeaderModel headerModel, List<TableItemModel> dataList) {
+    public <T, H> void bindData(String title, List<T> headerModel, List<H> dataList) {
         if (dataList == null || dataList.isEmpty()) {
             return;
         }
-        vHeaderView.bindData(headerModel);
+        vHeaderView.bindData(title, headerModel);
         if (mItemAdapter == null) {
             initRv(dataList);
         } else {
@@ -116,7 +115,7 @@ public class XTableView extends LinearLayout implements ITableView {
     }
 
     @Override
-    public void notifyItemData(int position, TableItemModel data) {
+    public <T extends TableRowModel<?, ?>> void notifyItemData(int position, T data) {
         if (data == null || mItemAdapter == null || mItemAdapter.getItemList() == null) {
             return;
         }
@@ -125,16 +124,19 @@ public class XTableView extends LinearLayout implements ITableView {
     }
 
     @Override
-    public void setCellAdapter(TableCellAdapter cellAdapter) {
-        mCellAdapter = cellAdapter;
+    public void setTableAdapter(XTableAdapter<?, ?> adapter) {
+        mTableAdapter = adapter;
+        if (vHeaderView != null) {
+            vHeaderView.setTableAdapter(adapter);
+        }
     }
 
-    private void initRv(final List<TableItemModel> dataList) {
-        if (mCellAdapter == null) {
-            throw new IllegalStateException("Please call setCellAdapter() first before bindData.");
+    private <T> void initRv(final List<T> dataList) {
+        if (mTableAdapter == null) {
+            throw new IllegalStateException("Please call setTableAdapter() first before bindData.");
         }
         vTableRv.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        mItemAdapter = new TableItemAdapter(getContext(), dataList, mCellWidth, mRowHeight, mScrollHelper, mCellAdapter);
+        mItemAdapter = new TableItemAdapter(getContext(), dataList, mCellWidth, mRowHeight, mScrollHelper, mTableAdapter);
 
         vTableRv.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
@@ -177,13 +179,6 @@ public class XTableView extends LinearLayout implements ITableView {
         });
 
         vTableRv.setAdapter(mItemAdapter);
-    }
-
-    @Override
-    public void setTableItemClickListener(TableItemClickListener listener) {
-        if (mItemAdapter != null) {
-            mItemAdapter.setTableItemClickListener(listener);
-        }
     }
 
     @Override
