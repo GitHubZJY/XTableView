@@ -31,7 +31,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public class TableItemView extends ConstraintLayout {
 
     private View vRootView;
-    private ConstraintLayout vTitleLayout;
+    private LinearLayout vTitleLayout;
     private ScrollLinearLayout vDataLl;
     private ScrollHelper mScrollHelper;
     private ObjectAnimator mAnimator;
@@ -67,7 +67,7 @@ public class TableItemView extends ConstraintLayout {
     }
 
     public void setMinHeight(int height) {
-        vTitleLayout.setMinHeight(height);
+        vTitleLayout.setMinimumHeight(height);
     }
 
     public void setAdapter(XTableAdapter adapter) {
@@ -79,7 +79,10 @@ public class TableItemView extends ConstraintLayout {
 
     public <T extends TableRowModel> void bindData(int position, T rowData) {
         if (vTitleLayout.getChildCount() == 0) {
-            vTitleLayout.addView(mAdapter.onCreateRowHeader(position));
+            View headerView = mAdapter.onCreateRowHeader(position);
+            vTitleLayout.addView(headerView);
+            headerView.getLayoutParams().width = mCellWidth;
+            headerView.getLayoutParams().height = MATCH_PARENT;
         }
         mAdapter.onBindRowHeader(position, vTitleLayout, rowData);
         List<?> dataList = rowData.rowData;

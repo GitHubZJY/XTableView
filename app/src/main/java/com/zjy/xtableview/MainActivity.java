@@ -1,6 +1,7 @@
 package com.zjy.xtableview;
 
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<TableRowModel<TableRowHeaderModel, TableRowCellModel>> mDataList;
     private TableHeaderModel mHeaderModel;
+    private CustomTableAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,9 +32,12 @@ public class MainActivity extends AppCompatActivity {
         vTableView.setLongPressDragEnable(true);
         vTableView.setSwipeEnable(true);
 
-        vTableView.setTableAdapter(new CustomTableAdapter(this));
+        mAdapter = new CustomTableAdapter(this);
+        mAdapter.bindData(mHeaderModel.getHeaderTitle(), mHeaderModel.getHeaderData(), mDataList);
+        vTableView.setTableAdapter(mAdapter);
 
-        vTableView.bindData(mHeaderModel.getHeaderTitle(), mHeaderModel.getHeaderData(), mDataList);
+        //testNotify();
+
     }
 
     private void initData() {
@@ -76,6 +81,26 @@ public class MainActivity extends AppCompatActivity {
         mHeaderModel.setHeaderData(headerData);
 
 
+    }
+
+    private void testNotify() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final TableRowModel<TableRowHeaderModel, TableRowCellModel> model = new TableRowModel<>();
+                model.setRowHeader(new TableRowHeaderModel("aa", "aa"));
+                List<TableRowCellModel> childData = new ArrayList<>();
+                childData.add(TableRowCellModel.createRiseCell("11"));
+                childData.add(TableRowCellModel.createRiseCell("11%"));
+                childData.add(TableRowCellModel.createRiseCell("11"));
+                childData.add(TableRowCellModel.createRiseCell("1"));
+                childData.add(TableRowCellModel.createFallCell("-11"));
+                childData.add(TableRowCellModel.createFallCell("-11%"));
+                model.setRowData(childData);
+                mAdapter.notifyItemData(4, model);
+            }
+        }, 2000);
     }
 
 

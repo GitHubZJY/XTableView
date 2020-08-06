@@ -59,6 +59,21 @@ public class XTableView extends LinearLayout implements ITableView {
 
     private ScrollHelper mScrollHelper;
 
+    private XTableAdapter.TableDataObserver mDataObserver = new XTableAdapter.TableDataObserver() {
+        @Override
+        public void onDataChange() {
+            if (mTableAdapter == null) {
+                return;
+            }
+            bindData(mTableAdapter.getHeader(), mTableAdapter.getColumnHeaderData(), mTableAdapter.getTableData());
+        }
+
+        @Override
+        public void onItemChange(int position, TableRowModel<?, ?> data) {
+            notifyItemData(position, data);
+        }
+    };
+
     public XTableView(@NonNull Context context) {
         this(context, null);
     }
@@ -105,9 +120,8 @@ public class XTableView extends LinearLayout implements ITableView {
         vTableRv.attachScrollHelper(mScrollHelper);
     }
 
-    @Override
-    public <T, H> void bindData(String title, List<T> headerModel, List<H> dataList) {
-        if (dataList == null || dataList.isEmpty()) {
+    private <T, H> void bindData(String title, List<T> headerModel, List<H> dataList) {
+        if (dataList == null) {
             return;
         }
         vHeaderView.bindData(title, headerModel);
@@ -119,8 +133,7 @@ public class XTableView extends LinearLayout implements ITableView {
         mItemAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public <T extends TableRowModel<?, ?>> void notifyItemData(int position, T data) {
+    private <T extends TableRowModel<?, ?>> void notifyItemData(int position, T data) {
         if (data == null || mItemAdapter == null || mItemAdapter.getItemList() == null) {
             return;
         }
@@ -131,9 +144,11 @@ public class XTableView extends LinearLayout implements ITableView {
     @Override
     public void setTableAdapter(XTableAdapter<?, ?> adapter) {
         mTableAdapter = adapter;
+        mTableAdapter.registerDataSetObserver(mDataObserver);
         if (vHeaderView != null) {
             vHeaderView.setTableAdapter(adapter);
         }
+        mTableAdapter.notifyDataSetChanged();
     }
 
     private <T> void initRv(final List<T> dataList) {
@@ -204,5 +219,6 @@ public class XTableView extends LinearLayout implements ITableView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mScrollHelper.destroy();
+        mTableAdapter.unRegisterDataSetObserver();
     }
 }

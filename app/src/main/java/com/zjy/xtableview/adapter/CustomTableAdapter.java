@@ -17,7 +17,7 @@ import com.zjy.xtableview.model.TableRowModel;
 /**
  * Date: 2020/8/5
  * Author: Yang
- * Describe:
+ * Describe: 定制表格样式
  */
 public class CustomTableAdapter extends XTableAdapter<String, TableRowModel<TableRowHeaderModel, TableRowCellModel>>{
 
