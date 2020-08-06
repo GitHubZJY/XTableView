@@ -9,6 +9,9 @@ A two-dimensional table view, base on recyclerview, both support to side slide m
 4. 支持拖拽变换顺序 <br/>
 5. 支持AndroidX <br/>
 
+## 效果预览
+![](https://github.com/GitHubZJY/XTableView/blob/master/image/xtableview_1.jpg)
+
 ## 如何使用
 在项目根目录的build.gradle添加：
 ```
