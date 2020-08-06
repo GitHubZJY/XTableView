@@ -52,6 +52,10 @@ public class XTableView extends LinearLayout implements ITableView {
      * 单元格宽度
      */
     private int mCellWidth;
+    /**
+     * 侧滑布局id
+     */
+    private int mSwipeLayoutId;
 
     private ScrollHelper mScrollHelper;
 
@@ -75,6 +79,7 @@ public class XTableView extends LinearLayout implements ITableView {
             mHeaderHeight = ta.getDimensionPixelSize(R.styleable.XTableView_headerHeight, DensityUtil.dp2px(context, 40));
             mRowHeight = ta.getDimensionPixelSize(R.styleable.XTableView_rowHeight, DensityUtil.dp2px(context, 70));
             mCellWidth = ta.getDimensionPixelSize(R.styleable.XTableView_cellWidth, DensityUtil.dp2px(context, 125));
+            mSwipeLayoutId = ta.getResourceId(R.styleable.XTableView_swipeLayout, R.layout.table_swipe_menu_layout);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -145,7 +150,7 @@ public class XTableView extends LinearLayout implements ITableView {
                 deleteItem.setWidth(DensityUtil.dp2px(getContext(), 125));
                 deleteItem.setHeight(MATCH_PARENT);
                 deleteItem.setNeedConfirm(true);
-                deleteItem.setLayoutId(R.layout.table_swipe_menu_layout);
+                deleteItem.setLayoutId(mSwipeLayoutId);
                 leftMenu.addMenuItem(deleteItem);
             }
         });
