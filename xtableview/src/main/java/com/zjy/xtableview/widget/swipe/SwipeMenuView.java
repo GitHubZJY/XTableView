@@ -71,7 +71,7 @@ public class SwipeMenuView extends LinearLayout implements View.OnClickListener 
                 if (v instanceof LinearLayout) {
                     ((LinearLayout) v).getChildAt(0).setVisibility(VISIBLE);
                     TextView menuTv = (TextView) ((LinearLayout) v).getChildAt(0);
-                    menuTv.setText("确认删除");
+                    menuTv.setText("Confirm delete");
                 }
             }
         }
@@ -88,7 +88,7 @@ public class SwipeMenuView extends LinearLayout implements View.OnClickListener 
             menuTag.setConfirm(false);
         }
         if (menuTv instanceof TextView) {
-            ((TextView) menuTv).setText("删除");
+            ((TextView) menuTv).setText("Delete");
         }
     }
 }

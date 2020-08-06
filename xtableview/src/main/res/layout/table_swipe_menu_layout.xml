@@ -10,11 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:drawableStart="@drawable/table_view_ic_delete"
-        android:drawableLeft="@drawable/table_view_ic_delete"
         android:drawablePadding="6dp"
         android:gravity="center"
-        android:text="删除"
+        android:text="Delete"
         android:textColor="@color/table_swipe_delete_txt_color"
         android:textSize="13sp" />
 
