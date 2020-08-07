@@ -63,6 +63,17 @@ public abstract class XTableAdapter<T, H extends TableRowModel<?, ?>> {
         }
     }
 
+    /**
+     * 插入某一行数据
+     * @param position 行下标
+     * @param data 插入的内容
+     */
+    public void notifyInsertData(int position, H data) {
+        if (mObserver != null) {
+            mObserver.onItemInsert(position, data);
+        }
+    }
+
     public String getHeader() {
         return mHeader;
     }
@@ -144,6 +155,13 @@ public abstract class XTableAdapter<T, H extends TableRowModel<?, ?>> {
          * @param data 覆盖的数据
          */
         void onItemChange(int position, TableRowModel<?, ?> data);
+
+        /**
+         * 插入某一行数据
+         * @param position 行下标
+         * @param data 插入的数据
+         */
+        void onItemInsert(int position, TableRowModel<?, ?> data);
     }
 
 }

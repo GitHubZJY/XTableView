@@ -1,5 +1,5 @@
 # XTableView [![](https://jitpack.io/v/GitHubZJY/XTableView.svg)](https://jitpack.io/#GitHubZJY/XTableView)
-一个基于RecyclerView+Scroller实现的二维表格组件，同时支持侧滑菜单、拖动调整列表顺序等拓展功能。
+一个基于RecyclerView+Scroller实现的二维表格组件，同时支持侧滑菜单、拖动调整列表顺序等拓展功能。<br/>
 A two-dimensional table view, base on recyclerview, both support to side slide menu、drag item and more.
 
 ## 特性
@@ -143,8 +143,30 @@ vTableView.setTableAdapter(adapter);
 ### 4.数据变更时刷新视图.
 数据变更也是通过adapter对象来进行：<br/>
 如果是所有数据替换，可调用 `bindData` 方法设置新的数据，然后通过 `notifyDataSetChanged` 进行更新. <br/>
-如果是单条数据源刷新，可调用 `notifyItemData(int position, H data)` 进行更新，position是对应的下标，data为新的数据.
+如果是单条数据刷新，可调用 `notifyItemData(int position, H data)` 进行更新，position是对应的下标，data为新的数据. <br/>
+如果是单条数据插入，可调用 `notifyInsertData(int position, H data)` 进行更新，position是对应的下标，data为新的数据.
+
+###5.设置监听回调
+```
+vTableView.setTableListener(new XTableListener() {
+    @Override
+    public void clickSwipeMenu(int position) {
+        //点击菜单
+        ...
+    }
+
+    @Override
+    public void onItemMove(int fromPos, int toPos) {
+        //拖拽Item
+        ...
+    }
+});
+```
+
+### 6.其他属性.
+本库也提供了LayoutManager的一些配置，例如： `setReverseLayout` 、 `setStackFromEnd` 、 `scrollToPosition` 、 `scrollToPositionWithOffset` 等，后续会再根据需要进行扩充.
+
 &nbsp;
 ## 感谢与参考
 [SwipeRecyclerView](https://github.com/yanzhenjie/SwipeRecyclerView) <br/>
-侧滑和拖拽是在SwipeRecyclerView这个库的基础上修改，是一个基于RecyclerView拓展得不错的组件。本库的自定义样式和数据类型基于适配器的模式设计，后续会继续更新，提升组件的定制性和可拔插性.
+侧滑和拖拽是在SwipeRecyclerView这个库的基础上修改，是一个基于RecyclerView拓展得不错的组件。本库的自定义样式和数据类型基于适配器的模式设计，后续会继续更新，提升组件的定制性和可拔插性，欢迎issue和star~

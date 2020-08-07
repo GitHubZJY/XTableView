@@ -27,4 +27,35 @@ public interface ITableView {
      */
     void setSwipeEnable(boolean enable);
 
+    /**
+     * 设置表格监听
+     * @param tableListener 监听器 {@link XTableListener}.
+     */
+    void setTableListener(XTableListener tableListener);
+
+    /**
+     * 设置布局反转
+     * @param reserveLayout 是否反转
+     */
+    void setReverseLayout(boolean reserveLayout);
+
+    /**
+     * 设置倒序
+     * @param stackFromEnd 是否倒序
+     */
+    void setStackFromEnd(boolean stackFromEnd);
+
+    /**
+     * 滑动到指定Item
+     * @param position Item下标
+     */
+    void scrollToPosition(int position);
+
+    /**
+     * 滑动到指定Item
+     * @param position Item下标
+     * @param offset 偏移
+     */
+    void scrollToPositionWithOffset(int position, int offset);
+
 }

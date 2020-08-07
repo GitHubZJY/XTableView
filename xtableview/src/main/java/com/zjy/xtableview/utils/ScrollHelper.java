@@ -48,7 +48,7 @@ public class ScrollHelper {
 
     public void notifyScroll(int x) {
         for (int i = 0; i < itemViewsMap.size(); i++) {
-            itemViewsMap.get(i).notifyScroll(x);
+            itemViewsMap.get(itemViewsMap.keyAt(i)).notifyScroll(x);
         }
         for (TableItemView.ItemScrollListener listener : scrollListeners) {
             listener.scroll(x);
@@ -57,13 +57,13 @@ public class ScrollHelper {
 
     public void notifyScrollFilling(boolean isLeft) {
         for (int i = 0; i < itemViewsMap.size(); i++) {
-            itemViewsMap.get(i).notifyScrollFilling(isLeft);
+            itemViewsMap.get(itemViewsMap.keyAt(i)).notifyScrollFilling(isLeft);
         }
     }
 
     public void stopScrollFilling() {
         for (int i = 0; i < itemViewsMap.size(); i++) {
-            itemViewsMap.get(i).stopScroll();
+            itemViewsMap.get(itemViewsMap.keyAt(i)).stopScroll();
         }
     }
 

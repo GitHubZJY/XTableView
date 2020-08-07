@@ -37,6 +37,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public class XTableView extends LinearLayout implements ITableView {
 
     private TouchSwipeRecyclerView vTableRv;
+    private LinearLayoutManager mLayoutManager;
     private TableHeaderView vHeaderView;
     private TableItemAdapter mItemAdapter;
     private XTableAdapter<?, ?> mTableAdapter;
@@ -56,8 +57,14 @@ public class XTableView extends LinearLayout implements ITableView {
      * 侧滑布局id
      */
     private int mSwipeLayoutId;
-
+    /**
+     * 滑动逻辑
+     */
     private ScrollHelper mScrollHelper;
+    /**
+     * 监听器
+     */
+    private XTableListener mTableListener;
 
     private XTableAdapter.TableDataObserver mDataObserver = new XTableAdapter.TableDataObserver() {
         @Override
@@ -71,6 +78,11 @@ public class XTableView extends LinearLayout implements ITableView {
         @Override
         public void onItemChange(int position, TableRowModel<?, ?> data) {
             notifyItemData(position, data);
+        }
+
+        @Override
+        public void onItemInsert(int position, TableRowModel<?, ?> data) {
+            notifyInsertData(position, data);
         }
     };
 
@@ -141,6 +153,14 @@ public class XTableView extends LinearLayout implements ITableView {
         mItemAdapter.notifyItemChanged(position, 1);
     }
 
+    private <T extends TableRowModel<?, ?>> void notifyInsertData(int position, T data) {
+        if (data == null || mItemAdapter == null || mItemAdapter.getItemList() == null) {
+            return;
+        }
+        mItemAdapter.getItemList().add(position, data);
+        mItemAdapter.notifyItemInserted(position);
+    }
+
     @Override
     public void setTableAdapter(XTableAdapter<?, ?> adapter) {
         mTableAdapter = adapter;
@@ -155,7 +175,8 @@ public class XTableView extends LinearLayout implements ITableView {
         if (mTableAdapter == null) {
             throw new IllegalStateException("Please call setTableAdapter() first before bindData.");
         }
-        vTableRv.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        mLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        vTableRv.setLayoutManager(mLayoutManager);
         mItemAdapter = new TableItemAdapter(getContext(), dataList, mCellWidth, mRowHeight, mScrollHelper, mTableAdapter);
 
         vTableRv.setSwipeMenuCreator(new SwipeMenuCreator() {
@@ -177,6 +198,9 @@ public class XTableView extends LinearLayout implements ITableView {
                 menuBridge.closeMenu();
                 mItemAdapter.getItemList().remove(position);
                 mItemAdapter.notifyItemRemoved(position);
+                if (mTableListener != null) {
+                    mTableListener.clickSwipeMenu(position);
+                }
             }
         });
 
@@ -188,7 +212,9 @@ public class XTableView extends LinearLayout implements ITableView {
                 Collections.swap(mItemAdapter.getItemList(), fromPosition, toPosition);
                 mItemAdapter.notifyItemMoved(fromPosition, toPosition);
                 mItemAdapter.notifyItemRangeChanged(Math.min(fromPosition, toPosition), Math.abs(fromPosition - toPosition) + 1);
-
+                if (mTableListener != null) {
+                    mTableListener.onItemMove(fromPosition, toPosition);
+                }
                 return true;
             }
 
@@ -213,6 +239,39 @@ public class XTableView extends LinearLayout implements ITableView {
         if (vTableRv != null) {
             vTableRv.enableSwipe(enable);
         }
+    }
+
+    @Override
+    public void setReverseLayout(boolean reserveLayout) {
+        if (mLayoutManager != null) {
+            mLayoutManager.setReverseLayout(reserveLayout);
+        }
+    }
+
+    @Override
+    public void setStackFromEnd(boolean stackFromEnd) {
+        if (mLayoutManager != null) {
+            mLayoutManager.setStackFromEnd(stackFromEnd);
+        }
+    }
+
+    @Override
+    public void scrollToPosition(int position) {
+        if (mLayoutManager != null) {
+            mLayoutManager.scrollToPosition(position);
+        }
+    }
+
+    @Override
+    public void scrollToPositionWithOffset(int position, int offset) {
+        if (mLayoutManager != null) {
+            mLayoutManager.scrollToPositionWithOffset(position, offset);
+        }
+    }
+
+    @Override
+    public void setTableListener(XTableListener tableListener) {
+        this.mTableListener = tableListener;
     }
 
     @Override
