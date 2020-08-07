@@ -139,14 +139,14 @@ public void bindData(String header, List<T> columnHeader, List<H> tableData)
 ```
 vTableView.setTableAdapter(adapter);
 ```
-
+&nbsp;
 ### 4.数据变更时刷新视图.
 数据变更也是通过adapter对象来进行：<br/>
 如果是所有数据替换，可调用 `bindData` 方法设置新的数据，然后通过 `notifyDataSetChanged` 进行更新. <br/>
 如果是单条数据刷新，可调用 `notifyItemData(int position, H data)` 进行更新，position是对应的下标，data为新的数据. <br/>
 如果是单条数据插入，可调用 `notifyInsertData(int position, H data)` 进行更新，position是对应的下标，data为新的数据.
-
-###5.设置监听回调
+&nbsp;
+### 5.设置监听回调
 ```
 vTableView.setTableListener(new XTableListener() {
     @Override
@@ -162,7 +162,7 @@ vTableView.setTableListener(new XTableListener() {
     }
 });
 ```
-
+&nbsp;
 ### 6.其他属性.
 本库也提供了LayoutManager的一些配置，例如： `setReverseLayout` 、 `setStackFromEnd` 、 `scrollToPosition` 、 `scrollToPositionWithOffset` 等，后续会再根据需要进行扩充.
 
