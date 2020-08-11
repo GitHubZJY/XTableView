@@ -158,7 +158,7 @@ public class XTableView extends LinearLayout implements ITableView {
             return;
         }
         mItemAdapter.getItemList().add(position, data);
-        mItemAdapter.notifyItemInserted(position);
+        mItemAdapter.notifyDataSetChanged();
     }
 
     @Override
