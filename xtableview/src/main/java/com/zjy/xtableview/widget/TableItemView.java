@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.zjy.xtableview.R;
+import com.zjy.xtableview.adapter.ItemConfig;
 import com.zjy.xtableview.adapter.XTableAdapter;
 import com.zjy.xtableview.model.TableRowModel;
 import com.zjy.xtableview.utils.DensityUtil;
@@ -33,6 +34,7 @@ public class TableItemView extends ConstraintLayout {
     private View vRootView;
     private LinearLayout vTitleLayout;
     private ScrollLinearLayout vDataLl;
+    private View splitLine;
     private ScrollHelper mScrollHelper;
     private ObjectAnimator mAnimator;
     private boolean mNotifyAnim = false;
@@ -59,11 +61,19 @@ public class TableItemView extends ConstraintLayout {
         vTitleLayout = findViewById(R.id.title_layout);
         vDataLl = findViewById(R.id.data_ll);
         vDataLl.setOrientation(LinearLayout.HORIZONTAL);
+        splitLine = findViewById(R.id.split_line);
     }
 
     public void attachScrollHelper(ScrollHelper helper) {
         mScrollHelper = helper;
         vDataLl.attachScrollHelper(helper);
+    }
+
+    public void setItemConfig(ItemConfig itemConfig) {
+        if (itemConfig == null) {
+            return;
+        }
+        mNotifyAnim = itemConfig.isNotifyAnim();
     }
 
     public void setMinHeight(int height) {
@@ -130,6 +140,7 @@ public class TableItemView extends ConstraintLayout {
 
     public void notifyScroll(final int x) {
         vDataLl.scrollTo(x, 0);
+        splitLine.setVisibility(x != 0 ? VISIBLE : INVISIBLE);
     }
 
     public void notifyScrollFilling(boolean isLeft) {

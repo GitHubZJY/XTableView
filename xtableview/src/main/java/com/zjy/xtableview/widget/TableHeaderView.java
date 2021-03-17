@@ -27,6 +27,7 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
 
     private TextView vTitle;
     private LinearLayout vHeaderRow;
+    private View splitLine;
     private int mHeaderCellWidth;
     private XTableAdapter mAdapter;
 
@@ -47,6 +48,7 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
         LayoutInflater.from(context).inflate(R.layout.table_header_layout, this);
         vTitle = findViewById(R.id.header_title_tv);
         vHeaderRow = findViewById(R.id.header_data_ll);
+        splitLine = findViewById(R.id.split_line);
     }
 
 
@@ -84,6 +86,7 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
 
     public void notifyScroll(int x) {
         vHeaderRow.scrollTo(x, 0);
+        splitLine.setVisibility(x != 0 ? VISIBLE : INVISIBLE);
     }
 
 }

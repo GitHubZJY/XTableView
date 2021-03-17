@@ -13,6 +13,7 @@
         <attr name="rowHeight" format="reference|dimension" />
         <attr name="cellWidth" format="reference|dimension" />
         <attr name="swipeLayout" format="reference" />
+        <attr name="notifyAnim" format="boolean" />
     </declare-styleable>
 
 </resources>

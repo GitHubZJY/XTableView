@@ -31,12 +31,13 @@ public class MainActivity extends AppCompatActivity {
         final ITableView vTableView = findViewById(R.id.table_view);
         vTableView.setLongPressDragEnable(true);
         vTableView.setSwipeEnable(true);
-
         mAdapter = new CustomTableAdapter(this);
         mAdapter.bindData(mHeaderModel.getHeaderTitle(), mHeaderModel.getHeaderData(), mDataList);
         vTableView.setTableAdapter(mAdapter);
 
-        //testNotify();
+
+
+        testNotify();
 
     }
 

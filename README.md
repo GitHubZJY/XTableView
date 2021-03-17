@@ -1,13 +1,14 @@
 # XTableView [![](https://jitpack.io/v/GitHubZJY/XTableView.svg)](https://jitpack.io/#GitHubZJY/XTableView)
-一个基于RecyclerView+Scroller实现的二维表格组件，同时支持侧滑菜单、拖动调整列表顺序等拓展功能。<br/>
-A two-dimensional table view, base on recyclerview, both support to side slide menu、drag item and more.
+一个基于RecyclerView+Scroller实现的二维表格组件，同时支持侧滑菜单、拖动调整列表顺序、刷新动画等拓展功能。<br/>
+A two-dimensional table view, base on recyclerview, both support to side slide menu、drag item、refresh animation and more.
 
 ## 特性
 1. 基于RecyclerView实现，可复用视图 <br/>
 2. 支持自定义数据源类型、表头及单元格样式 <br/>
 3. 支持列表Item侧滑菜单 <br/>
 4. 支持拖拽变换顺序 <br/>
-5. 支持AndroidX <br/>
+5. 支持默认刷新动画 <br/>
+6. 支持AndroidX <br/>
 
 ## 效果预览
 ![](https://github.com/GitHubZJY/XTableView/blob/master/image/xtableview_1.jpg)
@@ -41,7 +42,8 @@ implementation 'com.github.GitHubZJY:XTableView:v1.0.0'
         app:swipeLayout="@layout/table_swipe_menu_layout"
         app:headerHeight="50dp"
         app:rowHeight="80dp"
-        app:cellWidth="130dp">
+        app:cellWidth="130dp"
+        app:notifyAnim="true">
 
 </com.zjy.xtableview.XTableView>
 ```

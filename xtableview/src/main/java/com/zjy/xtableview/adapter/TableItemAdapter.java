@@ -28,14 +28,16 @@ public class TableItemAdapter<T extends TableRowModel<?, ?>> extends RecyclerVie
     private int mCellWidth;
     private ScrollHelper mScrollHelper;
     private XTableAdapter<?, ?> mCellAdapter;
+    private ItemConfig mItemConfig;
 
-    public TableItemAdapter(Context context, List<T> dataList, int cellWidth, int minItemHeight, ScrollHelper helper, XTableAdapter<?, ?> cellAdapter) {
+    public TableItemAdapter(Context context, List<T> dataList, int cellWidth, int minItemHeight, ScrollHelper helper, XTableAdapter<?, ?> cellAdapter, ItemConfig itemConfig) {
         this.mItemList = dataList;
         this.mContext = context;
         this.mMinHeight = minItemHeight;
         this.mCellWidth = cellWidth;
         this.mScrollHelper = helper;
         this.mCellAdapter = cellAdapter;
+        this.mItemConfig = itemConfig;
     }
 
     public void setData(List<T> itemList) {
@@ -51,6 +53,7 @@ public class TableItemAdapter<T extends TableRowModel<?, ?>> extends RecyclerVie
     public TableItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.table_item, null);
         ((TableItemView) view).attachScrollHelper(mScrollHelper);
+        ((TableItemView) view).setItemConfig(mItemConfig);
         return new ViewHolder(view, mCellWidth, mMinHeight);
     }
 

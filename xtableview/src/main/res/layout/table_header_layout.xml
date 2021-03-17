@@ -17,6 +17,14 @@
         android:layout_height="match_parent"
         />
 
+    <View
+        android:id="@+id/split_line"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:elevation="4dp"
+        android:background="#EEEEEE"
+        android:visibility="invisible"/>
+
     <LinearLayout
         android:id="@+id/header_data_ll"
         android:layout_width="match_parent"

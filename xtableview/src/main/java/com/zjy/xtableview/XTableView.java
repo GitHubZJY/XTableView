@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.zjy.xtableview.adapter.ItemConfig;
 import com.zjy.xtableview.adapter.TableItemAdapter;
 import com.zjy.xtableview.adapter.XTableAdapter;
 import com.zjy.xtableview.model.TableRowModel;
@@ -58,6 +59,10 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
      */
     private int mSwipeLayoutId;
     /**
+     * 刷新动画开关
+     */
+    private boolean mNotifyAnim;
+    /**
      * 滑动逻辑
      */
     private ScrollHelper mScrollHelper;
@@ -87,6 +92,7 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
             mRowHeight = ta.getDimensionPixelSize(R.styleable.XTableView_rowHeight, DensityUtil.dp2px(context, 70));
             mCellWidth = ta.getDimensionPixelSize(R.styleable.XTableView_cellWidth, DensityUtil.dp2px(context, 125));
             mSwipeLayoutId = ta.getResourceId(R.styleable.XTableView_swipeLayout, R.layout.table_swipe_menu_layout);
+            mNotifyAnim = ta.getBoolean(R.styleable.XTableView_notifyAnim, false);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -159,7 +165,9 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
         }
         mLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         vTableRv.setLayoutManager(mLayoutManager);
-        mItemAdapter = new TableItemAdapter(getContext(), dataList, mCellWidth, mRowHeight, mScrollHelper, mTableAdapter);
+        ItemConfig itemConfig = new ItemConfig();
+        itemConfig.setNotifyAnim(mNotifyAnim);
+        mItemAdapter = new TableItemAdapter(getContext(), dataList, mCellWidth, mRowHeight, mScrollHelper, mTableAdapter, itemConfig);
 
         vTableRv.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
