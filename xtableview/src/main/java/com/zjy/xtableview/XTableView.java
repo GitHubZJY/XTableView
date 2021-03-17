@@ -34,7 +34,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  * Author: Yang
  * Describe: 二维表格布局
  */
-public class XTableView extends LinearLayout implements ITableView {
+public class XTableView extends LinearLayout implements ITableView, XTableAdapter.TableDataObserver {
 
     private TouchSwipeRecyclerView vTableRv;
     private LinearLayoutManager mLayoutManager;
@@ -65,26 +65,6 @@ public class XTableView extends LinearLayout implements ITableView {
      * 监听器
      */
     private XTableListener mTableListener;
-
-    private XTableAdapter.TableDataObserver mDataObserver = new XTableAdapter.TableDataObserver() {
-        @Override
-        public void onDataChange() {
-            if (mTableAdapter == null) {
-                return;
-            }
-            bindData(mTableAdapter.getHeader(), mTableAdapter.getColumnHeaderData(), mTableAdapter.getTableData());
-        }
-
-        @Override
-        public void onItemChange(int position, TableRowModel<?, ?> data) {
-            notifyItemData(position, data);
-        }
-
-        @Override
-        public void onItemInsert(int position, TableRowModel<?, ?> data) {
-            notifyInsertData(position, data);
-        }
-    };
 
     public XTableView(@NonNull Context context) {
         this(context, null);
@@ -158,13 +138,13 @@ public class XTableView extends LinearLayout implements ITableView {
             return;
         }
         mItemAdapter.getItemList().add(position, data);
-        mItemAdapter.notifyDataSetChanged();
+        mItemAdapter.notifyItemChanged(position, 1);
     }
 
     @Override
     public void setTableAdapter(XTableAdapter<?, ?> adapter) {
         mTableAdapter = adapter;
-        mTableAdapter.registerDataSetObserver(mDataObserver);
+        mTableAdapter.registerDataSetObserver(this);
         if (vHeaderView != null) {
             vHeaderView.setTableAdapter(adapter);
         }
@@ -225,6 +205,24 @@ public class XTableView extends LinearLayout implements ITableView {
         });
 
         vTableRv.setAdapter(mItemAdapter);
+    }
+
+    @Override
+    public void onDataChange() {
+        if (mTableAdapter == null) {
+            return;
+        }
+        bindData(mTableAdapter.getHeader(), mTableAdapter.getColumnHeaderData(), mTableAdapter.getTableData());
+    }
+
+    @Override
+    public void onItemChange(int position, TableRowModel<?, ?> data) {
+        notifyItemData(position, data);
+    }
+
+    @Override
+    public void onItemInsert(int position, TableRowModel<?, ?> data) {
+        notifyInsertData(position, data);
     }
 
     @Override
