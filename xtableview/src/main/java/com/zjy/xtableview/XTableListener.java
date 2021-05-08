@@ -20,4 +20,10 @@ public interface XTableListener {
      */
     void onItemMove(int fromPos, int toPos);
 
+    /**
+     * 点击每一列的头部
+     * @param position 当前列的下标
+     */
+    void onColumnHeaderItemClick(int position);
+
 }

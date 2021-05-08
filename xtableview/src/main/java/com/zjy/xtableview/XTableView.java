@@ -123,6 +123,15 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
 
         mScrollHelper.addListener(vHeaderView);
         vTableRv.attachScrollHelper(mScrollHelper);
+
+        vHeaderView.setTableHeaderListener(new TableHeaderView.TableHeaderListener() {
+            @Override
+            public void clickColumnHeader(int position) {
+                if (mTableListener != null) {
+                    mTableListener.onColumnHeaderItemClick(position);
+                }
+            }
+        });
     }
 
     private <T, H> void bindData(String title, List<T> headerModel, List<H> dataList) {

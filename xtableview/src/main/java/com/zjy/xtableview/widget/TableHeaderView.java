@@ -31,6 +31,7 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
     private int mHeaderCellWidth;
     private int mHeaderHeadWidth;
     private XTableAdapter mAdapter;
+    private TableHeaderListener mListener;
 
     public TableHeaderView(Context context) {
         this(context, null);
@@ -66,11 +67,19 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
         }
     }
 
-    private <T> void generateRowCell(int position, final T headerModel) {
-        View cellTv = mAdapter.onBindHeader(position, headerModel);
-        vHeaderRow.addView(cellTv);
-        cellTv.getLayoutParams().width = mHeaderCellWidth;
-        cellTv.getLayoutParams().height = MATCH_PARENT;
+    private <T> void generateRowCell(final int position, final T headerModel) {
+        View cellView = mAdapter.onBindHeader(position, headerModel);
+        cellView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.clickColumnHeader(position);
+                }
+            }
+        });
+        vHeaderRow.addView(cellView);
+        cellView.getLayoutParams().width = mHeaderCellWidth;
+        cellView.getLayoutParams().height = MATCH_PARENT;
     }
 
     public void setHeaderWidth(int headerWidth) {
@@ -92,6 +101,14 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
     public void notifyScroll(int x) {
         vHeaderRow.scrollTo(x, 0);
         splitLine.setVisibility(x != 0 ? VISIBLE : INVISIBLE);
+    }
+
+    public void setTableHeaderListener(TableHeaderListener listener) {
+        mListener = listener;
+    }
+
+    public interface TableHeaderListener {
+        void clickColumnHeader(int position);
     }
 
 }

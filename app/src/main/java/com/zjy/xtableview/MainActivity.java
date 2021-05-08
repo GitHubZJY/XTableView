@@ -2,6 +2,7 @@ package com.zjy.xtableview;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,22 @@ public class MainActivity extends AppCompatActivity {
         vTableView.setTableAdapter(mAdapter);
 
 
+        vTableView.setTableListener(new XTableListener() {
+            @Override
+            public void clickSwipeMenu(int position) {
+
+            }
+
+            @Override
+            public void onItemMove(int fromPos, int toPos) {
+
+            }
+
+            @Override
+            public void onColumnHeaderItemClick(int position) {
+                Toast.makeText(MainActivity.this, "点击了第" + (position + 1) + "列的头部", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         testNotify();
 
