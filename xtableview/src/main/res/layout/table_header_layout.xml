@@ -19,10 +19,9 @@
 
     <View
         android:id="@+id/split_line"
-        android:layout_width="1px"
+        android:layout_width="4dp"
         android:layout_height="match_parent"
-        android:elevation="4dp"
-        android:background="#EEEEEE"
+        android:background="@drawable/bg_shadow_row_header"
         android:visibility="invisible"/>
 
     <LinearLayout
