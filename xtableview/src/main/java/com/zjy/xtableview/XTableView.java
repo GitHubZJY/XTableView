@@ -55,6 +55,10 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
      */
     private int mCellWidth;
     /**
+     * 行头部宽度
+     */
+    private int mRowHeaderWidth;
+    /**
      * 侧滑布局id
      */
     private int mSwipeLayoutId;
@@ -91,6 +95,7 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
             mHeaderHeight = ta.getDimensionPixelSize(R.styleable.XTableView_headerHeight, DensityUtil.dp2px(context, 40));
             mRowHeight = ta.getDimensionPixelSize(R.styleable.XTableView_rowHeight, DensityUtil.dp2px(context, 70));
             mCellWidth = ta.getDimensionPixelSize(R.styleable.XTableView_cellWidth, DensityUtil.dp2px(context, 125));
+            mRowHeaderWidth = ta.getDimensionPixelSize(R.styleable.XTableView_rowHeaderWidth, DensityUtil.dp2px(context, 125));
             mSwipeLayoutId = ta.getResourceId(R.styleable.XTableView_swipeLayout, R.layout.table_swipe_menu_layout);
             mNotifyAnim = ta.getBoolean(R.styleable.XTableView_notifyAnim, false);
         } catch (Exception e) {
@@ -111,7 +116,9 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
         addView(vTableRv);
 
         vHeaderView.getLayoutParams().height = mHeaderHeight;
+        vHeaderView.setHeaderWidth(mRowHeaderWidth);
         vHeaderView.setCellWidth(mCellWidth);
+        vTableRv.setHeaderWidth(mRowHeaderWidth);
         vTableRv.setCellWidth(mCellWidth);
 
         mScrollHelper.addListener(vHeaderView);
@@ -166,8 +173,11 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
         mLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         vTableRv.setLayoutManager(mLayoutManager);
         ItemConfig itemConfig = new ItemConfig();
+        itemConfig.setCellWidth(mCellWidth);
+        itemConfig.setRowHeight(mRowHeight);
         itemConfig.setNotifyAnim(mNotifyAnim);
-        mItemAdapter = new TableItemAdapter(getContext(), dataList, mCellWidth, mRowHeight, mScrollHelper, mTableAdapter, itemConfig);
+        itemConfig.setHeaderWidth(mRowHeaderWidth);
+        mItemAdapter = new TableItemAdapter(getContext(), dataList, mScrollHelper, mTableAdapter, itemConfig);
 
         vTableRv.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override

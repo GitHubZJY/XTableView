@@ -24,17 +24,13 @@ public class TableItemAdapter<T extends TableRowModel<?, ?>> extends RecyclerVie
 
     private Context mContext;
     private List<T> mItemList;
-    private int mMinHeight;
-    private int mCellWidth;
     private ScrollHelper mScrollHelper;
     private XTableAdapter<?, ?> mCellAdapter;
     private ItemConfig mItemConfig;
 
-    public TableItemAdapter(Context context, List<T> dataList, int cellWidth, int minItemHeight, ScrollHelper helper, XTableAdapter<?, ?> cellAdapter, ItemConfig itemConfig) {
+    public TableItemAdapter(Context context, List<T> dataList, ScrollHelper helper, XTableAdapter<?, ?> cellAdapter, ItemConfig itemConfig) {
         this.mItemList = dataList;
         this.mContext = context;
-        this.mMinHeight = minItemHeight;
-        this.mCellWidth = cellWidth;
         this.mScrollHelper = helper;
         this.mCellAdapter = cellAdapter;
         this.mItemConfig = itemConfig;
@@ -54,7 +50,7 @@ public class TableItemAdapter<T extends TableRowModel<?, ?>> extends RecyclerVie
         View view = LayoutInflater.from(mContext).inflate(R.layout.table_item, null);
         ((TableItemView) view).attachScrollHelper(mScrollHelper);
         ((TableItemView) view).setItemConfig(mItemConfig);
-        return new ViewHolder(view, mCellWidth, mMinHeight);
+        return new ViewHolder(view, mItemConfig.getCellWidth(), mItemConfig.getHeaderWidth(), mItemConfig.getRowHeight());
     }
 
     @Override
@@ -90,11 +86,12 @@ public class TableItemAdapter<T extends TableRowModel<?, ?>> extends RecyclerVie
 
         private TableItemView vItemView;
 
-        public ViewHolder(@NonNull View itemView, int cellWidth, int minHeight) {
+        public ViewHolder(@NonNull View itemView, int cellWidth, int headerWidth, int minHeight) {
             super(itemView);
             vItemView = itemView.findViewById(R.id.table_item_view);
             vItemView.setMinHeight(minHeight);
             vItemView.setCellWidth(cellWidth);
+            vItemView.setHeaderWidth(headerWidth);
         }
     }
 }

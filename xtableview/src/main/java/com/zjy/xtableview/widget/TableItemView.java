@@ -39,6 +39,7 @@ public class TableItemView extends ConstraintLayout {
     private ObjectAnimator mAnimator;
     private boolean mNotifyAnim = false;
     private int mCellWidth;
+    private int mHeaderWidth;
 
     private XTableAdapter mAdapter;
 
@@ -91,7 +92,7 @@ public class TableItemView extends ConstraintLayout {
         if (vTitleLayout.getChildCount() == 0) {
             View headerView = mAdapter.onCreateRowHeader(position);
             vTitleLayout.addView(headerView);
-            headerView.getLayoutParams().width = mCellWidth;
+            headerView.getLayoutParams().width = mHeaderWidth;
             headerView.getLayoutParams().height = MATCH_PARENT;
         }
         mAdapter.onBindRowHeader(position, vTitleLayout, rowData);
@@ -99,7 +100,7 @@ public class TableItemView extends ConstraintLayout {
         if (dataList != null) {
             mScrollHelper.setColumnCount(dataList.size());
             int columnCount = mScrollHelper.getColumnCount();
-            int maxScrollDistance = mCellWidth * (columnCount + 1) - DensityUtil.getScreenWidth(getContext());
+            int maxScrollDistance = mHeaderWidth + mCellWidth * columnCount - DensityUtil.getScreenWidth(getContext());
             vDataLl.setMaxScrollDistance(maxScrollDistance);
             for (int i = 0; i < dataList.size(); i++) {
                 //TODO data.get(i)
@@ -129,8 +130,12 @@ public class TableItemView extends ConstraintLayout {
 
     public void setCellWidth(int cellWidth) {
         mCellWidth = cellWidth;
+    }
+
+    public void setHeaderWidth(int headerWidth) {
+        mHeaderWidth = headerWidth;
         if (vTitleLayout != null && vTitleLayout.getLayoutParams() != null) {
-            vTitleLayout.getLayoutParams().width = cellWidth;
+            vTitleLayout.getLayoutParams().width = mHeaderWidth;
         }
     }
 

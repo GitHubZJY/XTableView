@@ -12,6 +12,7 @@
         <attr name="headerHeight" format="reference|dimension" />
         <attr name="rowHeight" format="reference|dimension" />
         <attr name="cellWidth" format="reference|dimension" />
+        <attr name="rowHeaderWidth" format="reference|dimension" />
         <attr name="swipeLayout" format="reference" />
         <attr name="notifyAnim" format="boolean" />
     </declare-styleable>

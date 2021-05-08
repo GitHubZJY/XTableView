@@ -15,7 +15,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:headerHeight="50dp"
         app:rowHeight="80dp"
-        app:cellWidth="130dp"
+        app:cellWidth="80dp"
+        app:rowHeaderWidth="100dp"
         app:notifyAnim="true">
 
     </com.zjy.xtableview.XTableView>

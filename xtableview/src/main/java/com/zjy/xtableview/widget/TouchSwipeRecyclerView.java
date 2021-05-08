@@ -32,6 +32,7 @@ public class TouchSwipeRecyclerView extends SwipeRecyclerView {
     private boolean mCanSwipe = true;
 
     private int mCellWidth;
+    private int mHeaderWidth;
     private ScrollHelper mScrollHelper;
 
     public TouchSwipeRecyclerView(Context context) {
@@ -106,8 +107,8 @@ public class TouchSwipeRecyclerView extends SwipeRecyclerView {
                     mMoveOffsetX = 0;
                 } else {
                     //当滑动大于最大宽度时，不在滑动（右边到头了）
-                    if ((mMoveOffsetX) > mCellWidth * (columnCount + 1) - DensityUtil.getScreenWidth(getContext())) {
-                        mMoveOffsetX = mCellWidth * (columnCount + 1) - DensityUtil.getScreenWidth(getContext());
+                    if ((mMoveOffsetX) > mHeaderWidth + mCellWidth * columnCount - DensityUtil.getScreenWidth(getContext())) {
+                        mMoveOffsetX = mHeaderWidth + mCellWidth * columnCount - DensityUtil.getScreenWidth(getContext());
                     }
                 }
                 mScrollHelper.notifyScroll(mMoveOffsetX);
@@ -132,6 +133,10 @@ public class TouchSwipeRecyclerView extends SwipeRecyclerView {
                 break;
         }
         return super.onTouchEvent(e);
+    }
+
+    public void setHeaderWidth(int headerWidth) {
+        mHeaderWidth = headerWidth;
     }
 
     public void setCellWidth(int cellWidth) {

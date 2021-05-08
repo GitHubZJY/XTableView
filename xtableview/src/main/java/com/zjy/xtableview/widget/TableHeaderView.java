@@ -29,6 +29,7 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
     private LinearLayout vHeaderRow;
     private View splitLine;
     private int mHeaderCellWidth;
+    private int mHeaderHeadWidth;
     private XTableAdapter mAdapter;
 
     public TableHeaderView(Context context) {
@@ -72,11 +73,15 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
         cellTv.getLayoutParams().height = MATCH_PARENT;
     }
 
+    public void setHeaderWidth(int headerWidth) {
+        mHeaderHeadWidth = headerWidth;
+        if (vTitle != null && vTitle.getLayoutParams() != null) {
+            vTitle.getLayoutParams().width = headerWidth;
+        }
+    }
+
     public void setCellWidth(int cellWidth) {
         mHeaderCellWidth = cellWidth;
-        if (vTitle != null && vTitle.getLayoutParams() != null) {
-            vTitle.getLayoutParams().width = cellWidth;
-        }
     }
 
     @Override
