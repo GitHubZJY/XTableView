@@ -84,6 +84,7 @@ public class TableItemAdapter<T extends TableRowModel<?, ?>> extends RecyclerVie
 
     @Override
     public int getItemViewType(int position) {
+        //返回对应的position，修复滚动时更新的显示异常
         return position;
     }
 

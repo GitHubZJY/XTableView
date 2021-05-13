@@ -130,6 +130,7 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
                 if (mTableListener != null) {
                     mTableListener.onColumnHeaderItemClick(position);
                 }
+                scrollToPosition(0);
             }
         });
     }
@@ -284,8 +285,8 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
 
     @Override
     public void scrollToPosition(int position) {
-        if (mLayoutManager != null) {
-            mLayoutManager.scrollToPosition(position);
+        if (vTableRv != null) {
+            vTableRv.scrollToPosition(position);
         }
     }
 
