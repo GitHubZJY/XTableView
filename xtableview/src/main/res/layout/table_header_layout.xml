@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/header_title_tv"
+    <FrameLayout
+        android:id="@+id/header_container"
         android:textSize="13sp"
         android:textColor="@color/table_view_second_txt_color"
         android:gravity="center_vertical"

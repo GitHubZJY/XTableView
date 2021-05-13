@@ -1,12 +1,11 @@
 package com.zjy.xtableview.widget;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -25,7 +24,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 @SuppressWarnings("rawtypes")
 public class TableHeaderView extends LinearLayout implements TableItemView.ItemScrollListener {
 
-    private TextView vTitle;
+    private FrameLayout vHead;
     private LinearLayout vHeaderRow;
     private View splitLine;
     private int mHeaderCellWidth;
@@ -48,7 +47,7 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
 
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.table_header_layout, this);
-        vTitle = findViewById(R.id.header_title_tv);
+        vHead = findViewById(R.id.header_container);
         vHeaderRow = findViewById(R.id.header_data_ll);
         splitLine = findViewById(R.id.split_line);
     }
@@ -58,22 +57,35 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
         mAdapter = adapter;
     }
 
-    public <T> void bindData(String title, List<T> dataList) {
-        if (vTitle != null) {
-            vTitle.setText(TextUtils.isEmpty(title) ? "" : title);
-        }
+    public <T> void bindData(Object title, List<T> dataList) {
+        generateHeaderCell(title);
         for (int i = 0; i < dataList.size(); i++) {
             generateRowCell(i, dataList.get(i));
         }
     }
 
-    private <T> void generateRowCell(final int position, final T headerModel) {
-        View cellView = mAdapter.onBindHeader(position, headerModel);
+    private <T> void generateHeaderCell(final T headerModel) {
+        View cellView = mAdapter.onBindTableHeader(headerModel);
         cellView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.clickColumnHeader(position);
+                    mListener.clickColumnHeader(0);
+                }
+            }
+        });
+        vHead.addView(cellView);
+        cellView.getLayoutParams().width = mHeaderCellWidth;
+        cellView.getLayoutParams().height = MATCH_PARENT;
+    }
+
+    private <T> void generateRowCell(final int position, final T headerModel) {
+        View cellView = mAdapter.onBindColumnHeader(position, headerModel);
+        cellView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.clickColumnHeader(position + 1);
                 }
             }
         });
@@ -84,8 +96,8 @@ public class TableHeaderView extends LinearLayout implements TableItemView.ItemS
 
     public void setHeaderWidth(int headerWidth) {
         mHeaderHeadWidth = headerWidth;
-        if (vTitle != null && vTitle.getLayoutParams() != null) {
-            vTitle.getLayoutParams().width = headerWidth;
+        if (vHead != null && vHead.getLayoutParams() != null) {
+            vHead.getLayoutParams().width = headerWidth;
         }
     }
 

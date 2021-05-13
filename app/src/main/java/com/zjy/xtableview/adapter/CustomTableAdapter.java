@@ -14,6 +14,8 @@ import com.zjy.xtableview.model.TableRowCellModel;
 import com.zjy.xtableview.model.TableRowHeaderModel;
 import com.zjy.xtableview.model.TableRowModel;
 
+import static android.view.Gravity.CENTER;
+
 /**
  * Date: 2020/8/5
  * Author: Yang
@@ -26,11 +28,21 @@ public class CustomTableAdapter extends XTableAdapter<String, TableRowModel<Tabl
     }
 
     @Override
-    public View onBindHeader(int position, String t) {
+    public View onBindTableHeader(String s) {
         TextView cellTv = new TextView(getContext());
         cellTv.setTextColor(getColor(R.color.table_view_second_txt_color));
         cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        cellTv.setGravity(Gravity.CENTER);
+        cellTv.setGravity(Gravity.START|CENTER);
+        cellTv.setText(s);
+        return cellTv;
+    }
+
+    @Override
+    public View onBindColumnHeader(int position, String t) {
+        TextView cellTv = new TextView(getContext());
+        cellTv.setTextColor(getColor(R.color.table_view_second_txt_color));
+        cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        cellTv.setGravity(CENTER);
         cellTv.setText(t);
         return cellTv;
     }
@@ -40,7 +52,7 @@ public class CustomTableAdapter extends XTableAdapter<String, TableRowModel<Tabl
         View view = LayoutInflater.from(getContext()).inflate(R.layout.table_item_cell_layout, null);
         TextView cellTv = view.findViewById(R.id.cell_tv);
         cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        cellTv.setGravity(Gravity.CENTER);
+        cellTv.setGravity(CENTER);
         return view;
     }
 

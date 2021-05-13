@@ -135,7 +135,7 @@ public class XTableView extends LinearLayout implements ITableView, XTableAdapte
         });
     }
 
-    private <T, H> void bindData(String title, List<T> headerModel, List<H> dataList) {
+    private <T, H> void bindData(Object title, List<?> headerModel, List<?> dataList) {
         if (dataList == null) {
             return;
         }

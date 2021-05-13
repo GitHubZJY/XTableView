@@ -8,7 +8,8 @@ A two-dimensional table view, base on recyclerview, both support to side slide m
 3. 支持列表Item侧滑菜单 <br/>
 4. 支持拖拽变换顺序 <br/>
 5. 支持默认刷新动画 <br/>
-6. 支持AndroidX <br/>
+6. 支持设置点击头部监听 <br/>
+7. 支持AndroidX <br/>
 
 ## 效果预览
 ![](https://github.com/GitHubZJY/XTableView/blob/master/image/xtableview_1.jpg)
@@ -60,7 +61,8 @@ vTableView.setSwipeEnable(true);
 ### 3.绑定数据
 绑定数据的设计灵感来自于RecyclerView的adapter设计，与数据相关的操作均通过 `XTableAdapter` 作为中间者来进行.
 #### 1.自定义一个adapter继承于 `XTableAdapter` ，通过实现adapter的方法，自定义表格样式。`XTableAdapter` 的各个方法作用如下：
->**onBindHeader** 创建列头部视图 <br/>
+>**onBindTableHeader** 绑定左上角表头视图 <br/>
+**onBindColumnHeader** 绑定(除表头外的)普通列头部视图 <br/>
 **onCreateTableItem** 创建每一个单元格的视图 <br/>
 **onBindTableItem** 绑定每一个单元格的视图数据 <br/>
 **onCreateRowHeader** 创建每一行的头部视图 <br/>
@@ -74,7 +76,17 @@ public class CustomTableAdapter extends XTableAdapter<String, TableRowModel<Tabl
     }
 
     @Override
-    public View onBindHeader(int position, String t) {
+    public View onBindTableHeader(String s) {
+        TextView cellTv = new TextView(getContext());
+        cellTv.setTextColor(getColor(R.color.table_view_second_txt_color));
+        cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        cellTv.setGravity(Gravity.START|CENTER);
+        cellTv.setText(s);
+        return cellTv;
+    }
+
+    @Override
+    public View onBindColumnHeader(int position, String t) {
         TextView cellTv = new TextView(getContext());
         cellTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         cellTv.setGravity(Gravity.CENTER);
@@ -133,7 +145,7 @@ public class CustomTableAdapter extends XTableAdapter<String, TableRowModel<Tabl
  * @param columnHeader 列头部数据集合
  * @param tableData 每一行的数据集合
  */
-public void bindData(String header, List<T> columnHeader, List<H> tableData)
+public void bindData(T header, List<T> columnHeader, List<H> tableData)
 ```
 
 #### 3.将adapter设置给XTableView.
@@ -162,8 +174,16 @@ vTableView.setTableListener(new XTableListener() {
         //拖拽Item
         ...
     }
+
+    @Override
+    public void onColumnHeaderItemClick(int position) {
+        Toast.makeText(MainActivity.this, "点击了第" + position + "列的头部", Toast.LENGTH_SHORT).show();
+        //点击某一列头部之后对列表数据进行重排序
+        ..
+    }
 });
 ```
+目前支持点击侧滑菜单、拖拽列表项、点击列头部的监听回调，例如实现根据某列进行排序的需求可以在 `onColumnHeaderItemClick` 里面进行
 &nbsp;
 ### 6.其他属性.
 本库也提供了LayoutManager的一些配置，例如： `setReverseLayout` 、 `setStackFromEnd` 、 `scrollToPosition` 、 `scrollToPositionWithOffset` 等，后续会再根据需要进行扩充.

@@ -14,6 +14,7 @@ import com.zjy.xtableview.model.TableRowHeaderModel;
 import com.zjy.xtableview.model.TableRowModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         vTableView.setLongPressDragEnable(true);
         vTableView.setSwipeEnable(true);
         mAdapter = new CustomTableAdapter(this);
-        mAdapter.bindData(mHeaderModel.getHeaderTitle(), mHeaderModel.getHeaderData(), mDataList);
+        mAdapter.bindData("表头实体", mHeaderModel.getHeaderData(), mDataList);
         vTableView.setTableAdapter(mAdapter);
 
 
@@ -50,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onColumnHeaderItemClick(int position) {
-                Toast.makeText(MainActivity.this, "点击了第" + (position + 1) + "列的头部", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "点击了第" + position + "列的头部", Toast.LENGTH_SHORT).show();
+                Collections.reverse(mDataList);
+                mAdapter.notifyDataSetChanged();
             }
         });
 

@@ -18,7 +18,7 @@ public abstract class XTableAdapter<T, H extends TableRowModel<?, ?>> {
     /**
      * 左上角的表头数据
      */
-    private String mHeader;
+    private T mHeader;
     /**
      * 列头部数据集合
      */
@@ -46,7 +46,7 @@ public abstract class XTableAdapter<T, H extends TableRowModel<?, ?>> {
      * @param columnHeader 列头部数据集合
      * @param tableData 每一行的数据集合
      */
-    public void bindData(String header, List<T> columnHeader, List<H> tableData) {
+    public void bindData(T header, List<T> columnHeader, List<H> tableData) {
         mHeader = header;
         mColumnHeader = columnHeader;
         mTableData = tableData;
@@ -74,7 +74,7 @@ public abstract class XTableAdapter<T, H extends TableRowModel<?, ?>> {
         }
     }
 
-    public String getHeader() {
+    public T getHeader() {
         return mHeader;
     }
 
@@ -87,11 +87,18 @@ public abstract class XTableAdapter<T, H extends TableRowModel<?, ?>> {
     }
 
     /**
+     * 创建表头部视图（即左上角重合的单元格）
+     * 考虑到可能有特殊的样式需求，所以抽取出来
+     * @return 表头部视图
+     */
+    public abstract View onBindTableHeader(T t);
+
+    /**
      * 创建列头部视图
      * @param position 列下标
      * @return 列视图
      */
-    public abstract View onBindHeader(int position, T t);
+    public abstract View onBindColumnHeader(int position, T t);
 
     /**
      * 创建每一格的视图
