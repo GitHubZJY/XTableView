@@ -101,6 +101,9 @@ public class TableItemView extends ConstraintLayout {
             mScrollHelper.setColumnCount(dataList.size());
             int columnCount = mScrollHelper.getColumnCount();
             int maxScrollDistance = mHeaderWidth + mCellWidth * columnCount - DensityUtil.getScreenWidth(getContext());
+            if (maxScrollDistance < 0) {
+                maxScrollDistance = 0;
+            }
             vDataLl.setMaxScrollDistance(maxScrollDistance);
             for (int i = 0; i < dataList.size(); i++) {
                 //TODO data.get(i)

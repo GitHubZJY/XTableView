@@ -107,8 +107,14 @@ public class TouchSwipeRecyclerView extends SwipeRecyclerView {
                     mMoveOffsetX = 0;
                 } else {
                     //当滑动大于最大宽度时，不在滑动（右边到头了）
-                    if ((mMoveOffsetX) > mHeaderWidth + mCellWidth * columnCount - DensityUtil.getScreenWidth(getContext())) {
-                        mMoveOffsetX = mHeaderWidth + mCellWidth * columnCount - DensityUtil.getScreenWidth(getContext());
+                    int overScreenWidth = mCellWidth * (columnCount + 1) - DensityUtil.getScreenWidth(getContext());
+                    if (overScreenWidth <= 0) {
+                        //列数不满一屏
+                        mMoveOffsetX = 0;
+                    } else {
+                        if ((mMoveOffsetX) > overScreenWidth) {
+                            mMoveOffsetX = overScreenWidth;
+                        }
                     }
                 }
                 mScrollHelper.notifyScroll(mMoveOffsetX);
